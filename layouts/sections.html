@@ -1,0 +1,26 @@
+{{- /*
+Lists every top-level section (content/<section>/), ordered by weight then title.
+Use with `layout = 'sections'` in front matter.
+*/}}
+{{ define "main" }}
+  {{ partial "heading.html" . }}
+
+  <ul class="section-list">
+    {{- range site.Sections.ByWeight }}
+      {{- $pages := .RegularPagesRecursive }}
+      {{- $n := len $pages }}
+      <li class="section-item">
+        <div class="section-head">
+          <a class="section-link" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+          <span class="section-meta">
+            {{ $n }} {{ cond (eq $n 1) "post" "posts" }}
+            {{- range first 1 $pages.ByDate.Reverse }} · updated {{ .Date.Format "Jan 2006" }}{{ end }}
+          </span>
+        </div>
+        {{- with partial "func/description.html" . }}<p class="section-desc">{{ . }}</p>{{ end }}
+      </li>
+    {{- else }}
+      <li class="muted">No sections yet.</li>
+    {{- end }}
+  </ul>
+{{ end }}

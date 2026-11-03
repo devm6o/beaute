@@ -1,0 +1,26 @@
+{{- /*
+Bundles a script from assets/ with esbuild and renders a deferred <script> tag.
+Production builds are minified and fingerprinted (with SRI); development builds
+get an external source map.
+
+@context {string} . The script's path under assets/.
+
+@example: {{ partial "head/js.html" "js/search.js" }}
+*/}}
+{{- with resources.Get . }}
+  {{- $opts := dict
+    "minify" (not hugo.IsDevelopment)
+    "sourceMap" (cond hugo.IsDevelopment "external" "")
+  }}
+  {{- with . | js.Build $opts }}
+    {{- if hugo.IsDevelopment }}
+      <script defer src="{{ .RelPermalink }}"></script>
+    {{- else }}
+      {{- with . | fingerprint }}
+        <script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- else }}
+  {{- errorf "head/js.html: script %q not found in assets/" . }}
+{{- end }}

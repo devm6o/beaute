@@ -1,0 +1,16 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
+{{- /* Posts fall back to their summary; list pages to the site description. */}}
+{{- $desc := .Description }}
+{{- if .IsPage }}{{ $desc = partial "func/description.html" . }}{{ end }}
+<meta name="description" content="{{ or $desc site.Params.description }}">
+{{- with site.Params.author.name }}
+<meta name="author" content="{{ . }}">
+{{- end }}
+<link rel="icon" href="{{ "favicon.ico" | relURL }}">
+{{- with site.Home.OutputFormats.Get "rss" }}
+<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }}">
+{{- end }}
+{{ partialCached "head/fonts.html" . }}
+{{ partialCached "head/css.html" . }}

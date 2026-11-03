@@ -1,0 +1,24 @@
+{{- /*
+Client-side search page. Use with `layout = 'search'` in front matter.
+Needs the JSON output format for the home page (layouts/home.json).
+*/}}
+{{ define "head" }}
+  {{- /* The search script is only needed on this page. */}}
+  {{ partial "head/js.html" "js/search.js" }}
+{{ end }}
+
+{{ define "main" }}
+  {{ partial "heading.html" . }}
+  {{- $index := site.Home.OutputFormats.Get "json" }}
+  {{- if not $index }}
+    {{- warnf "beauté: the search page needs a JSON search index. Add outputs.home = ['HTML', 'RSS', 'JSON'] to your site configuration." }}
+  {{- end }}
+  <form class="search-form" role="search" action="{{ .RelPermalink }}" method="get">
+    <input id="search-input" class="search-input" type="search" name="q"
+      placeholder="Search posts, tags…" autocomplete="off" aria-label="Search posts">
+  </form>
+  <p id="search-status" class="search-status muted" aria-live="polite"></p>
+  <ul id="search-results" class="post-list search-results"
+    data-index="{{ with $index }}{{ .RelPermalink }}{{ end }}"></ul>
+  <noscript><p class="muted">Search requires JavaScript. Browse <a href="{{ "tags/" | relURL }}">tags</a> instead.</p></noscript>
+{{ end }}

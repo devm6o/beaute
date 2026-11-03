@@ -1,0 +1,8 @@
+{{- $css := slice (resources.Get "css/syntax.css") (resources.Get "css/main.css") | resources.Concat "css/style.css" }}
+{{- if hugo.IsDevelopment }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{- else }}
+  {{- with $css | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+  {{- end }}
+{{- end }}

@@ -1,0 +1,69 @@
+{{- /*
+Renders a menu for the given menu ID.
+
+@context {page} page The current page.
+@context {string} menuID The menu ID.
+
+@example: {{ partial "menu.html" (dict "menuID" "main" "page" .) }}
+*/}}
+
+{{- $page := .page }}
+{{- $menuID := .menuID }}
+
+{{- with index site.Menus $menuID }}
+  <nav class="site-nav">
+    <ul>
+      {{- partial "inline/menu/walk.html" (dict "page" $page "menuEntries" .) }}
+    </ul>
+  </nav>
+{{- end }}
+
+{{- define "_partials/inline/menu/walk.html" }}
+  {{- $page := .page }}
+  {{- /* Pages inside a content section (not tag pages) count as being under "Sections". */}}
+  {{- $inSection := and $page.Section (not (in (slice "taxonomy" "term") $page.Kind)) }}
+  {{- range .menuEntries }}
+    {{- $class := "" }}
+    {{- $current := "" }}
+    {{- if $page.IsMenuCurrent .Menu . }}
+      {{- $class = "active" }}
+      {{- $current = "page" }}
+    {{- else if or
+      ($page.HasMenuCurrent .Menu .)
+      (and .Page (.Page.IsAncestor $page))
+      (and $inSection .Page (eq .Page.Layout "sections"))
+    }}
+      {{- /* E.g. "Tags" on a tag page, "Sections" on a post. */}}
+      {{- $class = "ancestor" }}
+      {{- $current = "true" }}
+    {{- end }}
+    {{- $name := .Name }}
+    {{- with .Identifier }}
+      {{- with T . }}
+        {{- $name = . }}
+      {{- end }}
+    {{- end }}
+    {{- $icon := .Params.icon }}
+    {{- if $icon }}
+      {{- $class = trim (printf "%s nav-icon" $class) " " }}
+    {{- end }}
+    <li>
+      <a href="{{ .URL }}"
+        {{- with $class }} class="{{ . }}"{{ end }}
+        {{- with $current }} aria-current="{{ . }}"{{ end }}
+        {{- if $icon }} title="{{ $name }}"{{ end }}>
+        {{- if eq $icon "search" -}}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.2-4.2"/></svg>
+          <span class="visually-hidden">{{ $name }}</span>
+        {{- else -}}
+          {{ $name }}
+        {{- end -}}
+      </a>
+      {{- with .Children }}
+        <ul>
+          {{- partial "inline/menu/walk.html" (dict "page" $page "menuEntries" .) }}
+        </ul>
+      {{- end }}
+    </li>
+  {{- end }}
+{{- end }}

@@ -1,0 +1,52 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-US'
+title = 'beauté'
+
+[params]
+  description = 'Demo for Hugo Theme beauté'
+  # Load IBM Plex fonts from Google Fonts. Set to false for system fonts only.
+  googleFonts = true
+
+[taxonomies]
+  tag = 'tags'
+
+# NOTE: Hugo does not merge [outputs] or [markup] from a theme into the site.
+# Copy these two blocks into your site's hugo.toml (search and code colours need them).
+[outputs]
+  home = ['HTML', 'RSS', 'JSON']
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+    style = 'github'
+  [markup.goldmark.renderer]
+    unsafe = false
+
+[menus]
+  [[menus.main]]
+    name = 'Sections'
+    pageRef = '/sections'
+    weight = 10
+
+  [[menus.main]]
+    name = 'Tags'
+    pageRef = '/tags'
+    weight = 20
+
+  [[menus.main]]
+    name = 'About'
+    pageRef = '/about'
+    weight = 40
+
+  # Shown as a magnifying-glass icon at the far right (params.icon).
+  [[menus.main]]
+    name = 'Search'
+    pageRef = '/search'
+    weight = 100
+    [menus.main.params]
+      icon = 'search'
+
+[module]
+  [module.hugoVersion]
+    extended = false
+    min = '0.146.0'

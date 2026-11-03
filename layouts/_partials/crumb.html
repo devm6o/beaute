@@ -1,0 +1,10 @@
+{{- /*
+Renders a "Parent /" breadcrumb link. Renders nothing for the home page.
+
+@context {page} . The parent page to link to.
+
+@example: {{ partial "crumb.html" .CurrentSection }}
+*/}}
+{{- if and . (not .IsHome) }}
+<p class="crumb"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a> /</p>
+{{- end }}

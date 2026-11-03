@@ -1,0 +1,8 @@
+{{ define "main" }}
+  {{ partial "crumb.html" .Parent }}
+  <h1 class="term-title">#{{ .Data.Term }}</h1>
+  {{- $n := len .Pages }}
+  <p class="muted">{{ $n }} {{ cond (eq $n 1) "post" "posts" }}</p>
+  {{ with .Content }}<div class="intro">{{ . }}</div>{{ end }}
+  {{ partial "post-list.html" (dict "pages" .Pages) }}
+{{ end }}

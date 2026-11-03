@@ -1,0 +1,12 @@
+{{- /*
+Returns the site's posts, newest first.
+
+A post is any regular page inside a section (content/<section>/...). Top-level
+pages such as About, Search and Sections are not posts.
+
+@context {page} . Any page (not used).
+@returns {page.Pages}
+
+@example: {{ $posts := partial "func/posts.html" . }}
+*/}}
+{{- return (where site.RegularPages "Section" "ne" "").ByDate.Reverse }}

@@ -1,0 +1,29 @@
+{{- /*
+Renders pages grouped by year, newest first.
+
+@context {page.Pages} pages The pages to list.
+@context {bool} [showTags=false] Whether to show each post's tags.
+
+@example: {{ partial "post-list.html" (dict "pages" .Pages) }}
+*/}}
+{{- $showTags := .showTags }}
+{{- range .pages.GroupByDate "2006" }}
+  <section class="year-group">
+    <h2 class="group-heading">{{ .Key }}</h2>
+    <ul class="post-list">
+      {{- range .Pages }}
+        <li class="post-item">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 02" }}</time>
+          <div class="post-body">
+            <a class="post-link" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+            {{- if $showTags }}
+              {{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
+            {{- end }}
+          </div>
+        </li>
+      {{- end }}
+    </ul>
+  </section>
+{{- else }}
+  <p class="muted">No posts yet.</p>
+{{- end }}

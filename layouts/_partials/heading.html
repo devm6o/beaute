@@ -1,0 +1,11 @@
+{{- /*
+Renders the page title and, if the page has content, that content as an intro.
+
+@context {page} . The current page.
+
+@example: {{ partial "heading.html" . }}
+*/}}
+<h1>{{ .Title }}</h1>
+{{- with .Content }}
+<div class="intro">{{ . }}</div>
+{{- end }}

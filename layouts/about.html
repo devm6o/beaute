@@ -1,0 +1,34 @@
+{{- /*
+Author / About page. Use with `layout = 'about'` in front matter.
+Reads site.Params.author: name, bio, avatar, links (list of {name, url}).
+*/}}
+{{ define "main" }}
+  {{ $a := site.Params.author | default dict }}
+  <article class="about">
+    <header class="author-card">
+      {{ with $a.avatar }}
+        <img class="author-avatar" src="{{ . | relURL }}" alt="{{ or $a.name site.Title }}" width="96" height="96">
+      {{ end }}
+      <div>
+        <h1>{{ or $a.name .Title }}</h1>
+        {{ with $a.bio }}<p class="author-bio">{{ . }}</p>{{ end }}
+        {{ with $a.links }}
+          <ul class="author-links">
+            {{ range . }}<li><a href="{{ .url }}" rel="me noopener">{{ .name }}</a></li>{{ end }}
+          </ul>
+        {{ end }}
+      </div>
+    </header>
+
+    <div class="post-content">
+      {{ .Content }}
+    </div>
+  </article>
+
+  {{ with first 5 (partial "func/posts.html" .) }}
+    <section class="about-recent">
+      <h2>Recent posts</h2>
+      {{ partial "post-list.html" (dict "pages" .) }}
+    </section>
+  {{ end }}
+{{ end }}

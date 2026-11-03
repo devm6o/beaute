@@ -1,0 +1,18 @@
+{{- /* Search index for the search page (assets/js/search.js). */ -}}
+{{- $index := slice -}}
+{{- range partial "func/posts.html" . -}}
+  {{- $tags := slice -}}
+  {{- range .GetTerms "tags" -}}
+    {{- $tags = $tags | append (dict "name" .Data.Term "url" .RelPermalink) -}}
+  {{- end -}}
+  {{- $index = $index | append (dict
+    "title" .Title
+    "url" .RelPermalink
+    "date" (.Date.Format "2006-01-02")
+    "section" .CurrentSection.LinkTitle
+    "tags" $tags
+    "summary" (partial "func/description.html" .)
+    "content" (.Plain | htmlUnescape)
+  ) -}}
+{{- end -}}
+{{- $index | jsonify -}}

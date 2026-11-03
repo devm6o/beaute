@@ -1,0 +1,5 @@
+<p>
+  {{ with site.Copyright }}{{ . }}{{ else }}&copy; {{ now.Year }} {{ or site.Params.author.name site.Title }}{{ end }}
+  · Powered by <a href="https://gohugo.io">Hugo</a>
+  {{- with site.Home.OutputFormats.Get "rss" }} · <a href="{{ .RelPermalink }}">RSS</a>{{ end }}
+</p>

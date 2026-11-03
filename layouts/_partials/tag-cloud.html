@@ -1,0 +1,10 @@
+{{- /*
+Renders taxonomy terms as chips with post counts.
+
+@context {page.OrderedTaxonomy} . The terms, e.g. .Data.Terms.Alphabetical.
+*/}}
+<ul class="tags tag-cloud">
+  {{- range . }}
+    <li><a class="tag" href="{{ .Page.RelPermalink }}">#{{ .Term }}<span class="count">{{ .Count }}</span></a></li>
+  {{- end }}
+</ul>

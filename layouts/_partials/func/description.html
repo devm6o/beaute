@@ -1,0 +1,18 @@
+{{- /*
+Returns a short description of a page: its `description` front matter or, if
+that is empty, its summary as plain text, truncated to 160 characters.
+
+The result is a plain (unescaped) string, so it is safe in HTML text, in
+attribute values and in JSON: each context escapes it as needed.
+
+@context {page} . The page.
+@returns {string}
+
+@example: {{ partial "func/description.html" . }}
+*/}}
+{{- $desc := .Description }}
+{{- if not $desc }}
+  {{- /* truncate HTML-escapes plain text, so unescape its result again. */}}
+  {{- $desc = .Summary | plainify | htmlUnescape | truncate 160 | htmlUnescape }}
+{{- end }}
+{{- return $desc }}

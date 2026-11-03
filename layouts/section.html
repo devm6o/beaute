@@ -1,0 +1,4 @@
+{{ define "main" }}
+  {{ partial "heading.html" . }}
+  {{ partial "post-list.html" (dict "pages" .RegularPagesRecursive) }}
+{{ end }}
